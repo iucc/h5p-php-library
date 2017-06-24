@@ -102,6 +102,10 @@ H5P.init = function (target) {
       params: JSON.parse(contentData.jsonContent)
     };
 
+    // Add dir-ltr|rtl to h5p-content div, based on iframe parent document directionality.
+    // todo: remove, as we add directionality to each content based on its own language.
+    //$element.addClass('dir-' + window.parent.document.dir);
+
     H5P.getUserData(contentId, 'state', function (err, previousState) {
       if (previousState) {
         library.userDatas = {
@@ -835,6 +839,9 @@ H5P.newRunnable = function (library, contentId, $attachTo, skipResize, extras) {
 
   if ($attachTo !== undefined) {
     $attachTo.toggleClass('h5p-standalone', standalone);
+    if (library.params.language == 'he' || library.params.language == 'ar') {
+        $attachTo.toggleClass('lang-'+library.params.language+' dir-rtl');
+    }
     instance.attach($attachTo);
     H5P.trigger(instance, 'domChanged', {
       '$target': $attachTo,
