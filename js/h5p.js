@@ -102,6 +102,10 @@ H5P.init = function (target) {
       params: JSON.parse(contentData.jsonContent)
     };
 
+    // Add h5p-dir-rtl to h5p-content div, based on iframe parent document directionality.
+    // TODO: remove, as we add directionality to each content based on its own language.
+    // $element.addClass('h5p-dir-' + window.parent.document.dir);
+
     H5P.getUserData(contentId, 'state', function (err, previousState) {
       if (previousState) {
         library.userDatas = {
@@ -836,6 +840,11 @@ H5P.newRunnable = function (library, contentId, $attachTo, skipResize, extras) {
 
   if ($attachTo !== undefined) {
     $attachTo.toggleClass('h5p-standalone', standalone);
+    // Get viewing directionality and alignments from content.
+    // TODO: migrate to a function that checks all RTL languages ISO-639
+      if (library.params.language === 'he' || library.params.language === 'ar') {
+          $attachTo.toggleClass('lang-' + library.params.language + ' h5p-dir-rtl');
+      }
     instance.attach($attachTo);
     H5P.trigger(instance, 'domChanged', {
       '$target': $attachTo,
